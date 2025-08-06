@@ -2,24 +2,48 @@
 import React, { useState } from "react";
 import { isValidHex, findBestNumber } from "@/data/utils";
 
+type ColorShades = {
+  50: string;
+  100: string;
+  200: string;
+  300: string;
+  400: string;
+  500: string;
+  600: string;
+  700: string;
+  800: string;
+  900: string;
+  950: string;
+};
+
+type Colors = {
+  gray: ColorShades;
+  red: ColorShades;
+  orange: ColorShades;
+  amber: ColorShades;
+  yellow: ColorShades;
+  lime: ColorShades;
+  green: ColorShades;
+  emerald: ColorShades;
+  teal: ColorShades;
+  cyan: ColorShades;
+  sky: ColorShades;
+} & Record<string, Record<string, string>>;
+
 interface PalletteProps {
-  colors: Record<string, Record<string, string>>
-  setColors: React.Dispatch<React.SetStateAction<Record<string, Record<string, string>>>>
+  colors: Colors
+  setColors: React.Dispatch<React.SetStateAction<Colors>>
 }
 
 export default function Pallette({ colors, setColors }: PalletteProps) {
   const [copiedColor, setCopiedColor] = useState<string | null>(null)
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; color: any } | null>(null)
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; color: { name: string; hex: string; familyName: string; colorKey: string } } | null>(null)
   const [newFamilyInput, setNewFamilyInput] = useState<{ index: number; name: string } | null>(null)
   const [newColorInput, setNewColorInput] = useState<{ familyName: string; hex: string } | null>(null)
 
-  const handleColorClick = (colorName: string) => {
-    navigator.clipboard.writeText(colorName)
-    setCopiedColor(colorName)
-    setTimeout(() => setCopiedColor(null), 1500)
-  }
+  // Removed unused handleColorClick function
 
-  const handleRightClick = (e: React.MouseEvent, color: any) => {
+  const handleRightClick = (e: React.MouseEvent, color: { name: string; hex: string; familyName: string; colorKey: string }) => {
     e.preventDefault()
     setContextMenu({ x: e.clientX, y: e.clientY, color })
   }
@@ -42,7 +66,7 @@ export default function Pallette({ colors, setColors }: PalletteProps) {
     setColors(prevColors => {
       const newColors = { ...prevColors }
       if (newColors[familyName]) {
-        const { [colorKey]: removed, ...rest } = newColors[familyName]
+        const { [colorKey]: _, ...rest } = newColors[familyName]
         newColors[familyName] = rest
       }
       return newColors
@@ -79,8 +103,8 @@ export default function Pallette({ colors, setColors }: PalletteProps) {
 
   const handleRemoveFamily = (familyName: string) => {
     setColors(prevColors => {
-      const { [familyName]: removed, ...rest } = prevColors
-      return rest
+      const { [familyName]: _, ...rest } = prevColors
+      return rest as Colors
     })
   }
 
