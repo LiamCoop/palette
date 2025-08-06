@@ -36,12 +36,10 @@ interface PalletteProps {
 }
 
 export default function Pallette({ colors, setColors }: PalletteProps) {
-  const [copiedColor, setCopiedColor] = useState<string | null>(null)
+  const [, setCopiedColor] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; color: { name: string; hex: string; familyName: string; colorKey: string } } | null>(null)
   const [newFamilyInput, setNewFamilyInput] = useState<{ index: number; name: string } | null>(null)
   const [newColorInput, setNewColorInput] = useState<{ familyName: string; hex: string } | null>(null)
-
-  // Removed unused handleColorClick function
 
   const handleRightClick = (e: React.MouseEvent, color: { name: string; hex: string; familyName: string; colorKey: string }) => {
     e.preventDefault()
@@ -66,7 +64,8 @@ export default function Pallette({ colors, setColors }: PalletteProps) {
     setColors(prevColors => {
       const newColors = { ...prevColors }
       if (newColors[familyName]) {
-        const { [colorKey]: _, ...rest } = newColors[familyName]
+        const { [colorKey]: removed, ...rest } = newColors[familyName]
+        void removed // ESLint: acknowledge unused variable
         newColors[familyName] = rest
       }
       return newColors
@@ -103,7 +102,8 @@ export default function Pallette({ colors, setColors }: PalletteProps) {
 
   const handleRemoveFamily = (familyName: string) => {
     setColors(prevColors => {
-      const { [familyName]: _, ...rest } = prevColors
+      const { [familyName]: removed, ...rest } = prevColors
+      void removed // ESLint: acknowledge unused variable
       return rest as Colors
     })
   }
