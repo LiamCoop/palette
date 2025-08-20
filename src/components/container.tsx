@@ -230,7 +230,11 @@ export default function Container() {
         />
         <div className="flex flex-1 gap-8">
           <div className="flex-1">
-            <Pallette colors={colors} setColors={setColors} />
+            <Pallette 
+              colors={colors} 
+              setColors={setColors} 
+              onSave={currentProject ? () => updateProjectInDatabase(currentProject.id, { colors }) : undefined}
+            />
           </div>
           <div className="w-96 p-8">
             <ColorEditor colors={colors} setColors={setColors} />

@@ -33,9 +33,10 @@ type Colors = {
 interface PalletteProps {
   colors: Colors
   setColors: React.Dispatch<React.SetStateAction<Colors>>
+  onSave?: () => void
 }
 
-export default function Pallette({ colors, setColors }: PalletteProps) {
+export default function Pallette({ colors, setColors, onSave }: PalletteProps) {
   const [, setCopiedColor] = useState<string | null>(null)
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; color: { name: string; hex: string; familyName: string; colorKey: string } } | null>(null)
   const [newFamilyInput, setNewFamilyInput] = useState<{ index: number; name: string } | null>(null)
@@ -165,6 +166,21 @@ export default function Pallette({ colors, setColors }: PalletteProps) {
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
+        {/* Header with save button */}
+        <div className="flex justify-end mb-6">
+          {onSave && (
+            <button
+              onClick={onSave}
+              className="flex items-center gap-2 px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors shadow-sm"
+              title="Save changes to database"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Save
+            </button>
+          )}
+        </div>
         <div className="space-y-6">
           {Object.entries(colors).map(([familyName, familyColors], index) => (
             <React.Fragment key={familyName}>
